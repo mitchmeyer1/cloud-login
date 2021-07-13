@@ -23,13 +23,13 @@ public class CloudLoginExample : MonoBehaviour {
 
         if (gameToken == "" || gameID == "")
         {
-            EditorUtility.DisplayDialog("Add ID and Token", "Please add your token and ID, if you do not have one, you can create a free account from Tools/CloudLogin/Generate CloudLogin Account", "OK");
+            EditorUtility.DisplayDialog("Add ID and Token", "Please add your token and ID, if you do not have one, you can create a free account from cloudlogin.dev", "OK");
             throw new Exception("Token and ID Invalid");
         }
         else
         {
             Debug.Log("CloudLogin start");
-            CloudLogin.SetVerboseLogging(false);
+            CloudLogin.SetVerboseLogging(true);
             CloudLogin.SetUpGame(gameID, gameToken, ApplicationSetUp, true);
         }
 
