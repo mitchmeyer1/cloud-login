@@ -236,7 +236,7 @@ namespace CloudLoginUnity
         #region request: set score
         public void SetScore(int score, Action<string, bool> callback = null)
         {
-            StartCoroutine(SetScoreRoutine(credits, callback));
+            StartCoroutine(SetScoreRoutine(score, callback));
         }
 
         private IEnumerator SetScoreRoutine(int score, Action<string, bool> callback = null)
@@ -244,7 +244,7 @@ namespace CloudLoginUnity
             CloudLogin.Log("CloudLoginUser Set Score: " + score.ToString());
 
             if (CloudLogin.GetGameId() == null)
-                throw new CloudLoginException("Please set up your game with PainLessAuth.SetUpGame before modifying users");
+                throw new CloudLoginException("Please set up your game with CloudLogin.SetUpGame before modifying users");
 
             WWWForm form = new WWWForm();
             form.AddField("authentication_token", GetAuthenticationToken());
@@ -325,7 +325,7 @@ namespace CloudLoginUnity
                 return attributes[key];
             }
             else
-                return null;
+                return "";
         }
 
         public void SetAttribute(string key, string value, Action<string, bool> callback = null)

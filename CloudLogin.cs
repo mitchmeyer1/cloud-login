@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using Boomlagoon.JSON;
-using UnityEditor;
+//using UnityEditor;
 
 namespace CloudLoginUnity
 {
@@ -18,32 +18,32 @@ namespace CloudLoginUnity
 
         static UnityWebRequestAsyncOperation request;
 
-        #region editor actions
-        [MenuItem("Tools/CloudLogin/Generate CloudLogin Account")]
-        private static void GenerateCloudLoginAccount()
-        {
-            EditorUtility.DisplayProgressBar("Generating CloudLogin Account...", "...", 0);
-            UnityWebRequest www = UnityWebRequest.Post(baseURL+"/games","");
+        //#region editor actions
+        //[MenuItem("Tools/CloudLogin/Generate CloudLogin Account")]
+        //private static void GenerateCloudLoginAccount()
+        //{
+        //    EditorUtility.DisplayProgressBar("Generating CloudLogin Account...", "...", 0);
+        //    UnityWebRequest www = UnityWebRequest.Post(baseURL+"/games","");
 
 
-            request = www.SendWebRequest();
+        //    request = www.SendWebRequest();
 
-            while (!request.isDone)
-            {
+        //    while (!request.isDone)
+        //    {
 
-            }
+        //    }
 
-            var data = www.downloadHandler.text;
-            JSONObject json = JSONObject.Parse(data);
+        //    var data = www.downloadHandler.text;
+        //    JSONObject json = JSONObject.Parse(data);
 
-            EditorUtility.ClearProgressBar();
-            EditorUtility.DisplayDialog("Account Created", "Your id is '" + json.GetNumber("id").ToString() + "'  and your token is '" + json.GetString("token") + "' - Write this down and use it with CloudLogin.SetUpGame in your code \n \ncheck out cloudlogin.dev/docs for instructions\n\nYou now may integrate sign up, login, metadata and in game store into your Unity Game!", "cool thanks");
+        //    EditorUtility.ClearProgressBar();
+        //    EditorUtility.DisplayDialog("Account Created", "Your id is '" + json.GetNumber("id").ToString() + "'  and your token is '" + json.GetString("token") + "' - Write this down and use it with CloudLogin.SetUpGame in your code \n \ncheck out cloudlogin.dev/docs for instructions\n\nYou now may integrate sign up, login, metadata and in game store into your Unity Game!", "cool thanks");
 
-        }
+        //}
 
        
 
-        #endregion
+        //#endregion
 
         #region instance vars
         private string id;
