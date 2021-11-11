@@ -128,13 +128,14 @@ namespace CloudLoginUnity
 
             CloudLogin.Log("CloudLoginUser Add Credits: " + credits.ToString());
             if (CloudLogin.GetGameId() == null)
-                throw new CloudLoginException("Please set up your game with PainLessAuth.SetUpGame before modifying users");
+                throw new CloudLoginException("Please set up your game with CloudLogin.SetUpGame before modifying users");
 
 
             WWWForm form = new WWWForm();
             form.AddField("authentication_token", GetAuthenticationToken());
             form.AddField("credits", credits);
-            var request = UnityWebRequest.Post(CloudLogin.GetBaseURL() + "/users/" + this.id + "/add_credits", form);
+            var request = UnityWebRequest.Post(CloudLogin.GetBaseURL() + "/users/" + CurrentUser.id + "/add_credits", form);
+            request.SetRequestHeader("authentication_token", CloudLoginUser.CurrentUser.GetAuthenticationToken());
 
             yield return request.SendWebRequest();
 
@@ -170,13 +171,14 @@ namespace CloudLoginUnity
             CloudLogin.Log("CloudLoginUser Set Credits: " + credits.ToString());
 
             if (CloudLogin.GetGameId() == null)
-                throw new CloudLoginException("Please set up your game with PainLessAuth.SetUpGame before modifying users");
+                throw new CloudLoginException("Please set up your game with CloudLogin.SetUpGame before modifying users");
 
 
             WWWForm form = new WWWForm();
             form.AddField("authentication_token", GetAuthenticationToken());
             form.AddField("credits", credits);
-            var request = UnityWebRequest.Post(CloudLogin.GetBaseURL() + "/users/" + this.id + "/set_credits", form);
+            var request = UnityWebRequest.Post(CloudLogin.GetBaseURL() + "/users/" + CurrentUser.id + "/set_credits", form);
+            request.SetRequestHeader("authentication_token", CloudLoginUser.CurrentUser.GetAuthenticationToken());
 
             yield return request.SendWebRequest();
 
@@ -210,13 +212,15 @@ namespace CloudLoginUnity
             CloudLogin.Log("CloudLoginUser Add Score: " + score.ToString());
 
             if (CloudLogin.GetGameId() == null)
-                throw new CloudLoginException("Please set up your game with PainLessAuth.SetUpGame before modifying users");
+                throw new CloudLoginException("Please set up your game with CloudLogin.SetUpGame before modifying users");
 
 
             WWWForm form = new WWWForm();
             form.AddField("authentication_token", GetAuthenticationToken());
             form.AddField("score", score);
-            var request = UnityWebRequest.Post(CloudLogin.GetBaseURL() + "/users/" + this.id + "/add_score", form);
+
+            var request = UnityWebRequest.Post(CloudLogin.GetBaseURL() + "/users/" + CurrentUser.id + "/add_score", form);
+            request.SetRequestHeader("authentication_token", CloudLoginUser.CurrentUser.GetAuthenticationToken());
 
             yield return request.SendWebRequest();
 
@@ -249,7 +253,8 @@ namespace CloudLoginUnity
             WWWForm form = new WWWForm();
             form.AddField("authentication_token", GetAuthenticationToken());
             form.AddField("score", score);
-            var request = UnityWebRequest.Post(CloudLogin.GetBaseURL() + "/users/" + this.id + "/set_score", form);
+            var request = UnityWebRequest.Post(CloudLogin.GetBaseURL() + "/users/" + CurrentUser.id + "/set_score", form);
+            request.SetRequestHeader("authentication_token", CloudLoginUser.CurrentUser.GetAuthenticationToken());
 
             yield return request.SendWebRequest();
 
@@ -281,12 +286,13 @@ namespace CloudLoginUnity
             CloudLogin.Log("CloudLoginUser Get Attributes");
 
             if (CloudLogin.GetGameId() == null)
-                throw new CloudLoginException("Please set up your game with PainLessAuth.SetUpGame before modifying users");
+                throw new CloudLoginException("Please set up your game with CloudLogin.SetUpGame before modifying users");
 
             var parameters = "?authentication_token=" + GetAuthenticationToken();
 
 
             var request = UnityWebRequest.Get(CloudLogin.GetBaseURL() + "/users/" + this.id + "/game_user_attributes"+ parameters);
+            request.SetRequestHeader("authentication_token", CloudLoginUser.CurrentUser.GetAuthenticationToken());
 
             yield return request.SendWebRequest();
 
@@ -338,14 +344,15 @@ namespace CloudLoginUnity
             CloudLogin.Log("CloudLoginUser Set Attributes: "+key);
 
             if (CloudLogin.GetGameId() == null)
-                throw new CloudLoginException("Please set up your game with PainLessAuth.SetUpGame before modifying users");
+                throw new CloudLoginException("Please set up your game with CloudLogin.SetUpGame before modifying users");
 
             WWWForm form = new WWWForm();
             form.AddField("authentication_token", GetAuthenticationToken());
             form.AddField("key", key);
             form.AddField("value", value);
 
-            var request = UnityWebRequest.Post(CloudLogin.GetBaseURL() + "/users/" + this.id + "/add_game_user_attribute", form);
+            var request = UnityWebRequest.Post(CloudLogin.GetBaseURL() + "/users/" + CurrentUser.id + "/add_game_user_attribute", form);
+            request.SetRequestHeader("authentication_token", CloudLoginUser.CurrentUser.GetAuthenticationToken());
 
             yield return request.SendWebRequest();
 
@@ -375,10 +382,11 @@ namespace CloudLoginUnity
             CloudLogin.Log("CloudLoginUser Remove Attributes: " + key);
 
             if (CloudLogin.GetGameId() == null)
-                throw new CloudLoginException("Please set up your game with PainLessAuth.SetUpGame before modifying users");
+                throw new CloudLoginException("Please set up your game with CloudLogin.SetUpGame before modifying users");
 
             var parameters = "?authentication_token=" + GetAuthenticationToken() + "&game_user_attribute_key=" + key;
-            var request = UnityWebRequest.Get(CloudLogin.GetBaseURL() + "/users/" + this.id + "/remove_game_user_attributes" + parameters);
+            var request = UnityWebRequest.Get(CloudLogin.GetBaseURL() + "/users/" + CurrentUser.id + "/remove_game_user_attributes" + parameters);
+            request.SetRequestHeader("authentication_token", CloudLoginUser.CurrentUser.GetAuthenticationToken());
 
             yield return request.SendWebRequest();
 
@@ -415,12 +423,13 @@ namespace CloudLoginUnity
             CloudLogin.Log("CloudLoginUser Download Store Items: ");
 
             if (CloudLogin.GetGameId() == null)
-                throw new CloudLoginException("Please set up your game with PainLessAuth.SetUpGame before modifying users");
+                throw new CloudLoginException("Please set up your game with CloudLogin.SetUpGame before modifying users");
 
             var parameters = "?authentication_token=" + GetAuthenticationToken();
 
 
-            var request = UnityWebRequest.Get(CloudLogin.GetBaseURL() + "/users/" + this.id + "/game_user_store_items" + parameters);
+            var request = UnityWebRequest.Get(CloudLogin.GetBaseURL() + "/users/" + CurrentUser.id + "/game_user_store_items" + parameters);
+            request.SetRequestHeader("authentication_token", CloudLoginUser.CurrentUser.GetAuthenticationToken());
 
             yield return request.SendWebRequest();
 
@@ -471,13 +480,14 @@ namespace CloudLoginUnity
             CloudLogin.Log("CloudLoginUser Purchase Store Items: ");
 
             if (CloudLogin.GetGameId() == null)
-                throw new CloudLoginException("Please set up your game with PainLessAuth.SetUpGame before modifying users");
+                throw new CloudLoginException("Please set up your game with CloudLogin.SetUpGame before modifying users");
 
             WWWForm form = new WWWForm();
             form.AddField("authentication_token", GetAuthenticationToken());
             form.AddField("store_item_id", storeItemId.ToString());
 
-            var request = UnityWebRequest.Post(CloudLogin.GetBaseURL() + "/users/" + this.id + "/purchase_game_user_store_item", form);
+            var request = UnityWebRequest.Post(CloudLogin.GetBaseURL() + "/users/" + CurrentUser.id + "/purchase_game_user_store_item", form);
+            request.SetRequestHeader("authentication_token", CloudLoginUser.CurrentUser.GetAuthenticationToken());
 
             yield return request.SendWebRequest();
 
@@ -519,10 +529,11 @@ namespace CloudLoginUnity
             CloudLogin.Log("CloudLoginUser Remove Store Item: "+ storeItemID);
 
             if (CloudLogin.GetGameId() == null)
-                throw new CloudLoginException("Please set up your game with PainLessAuth.SetUpGame before modifying users");
+                throw new CloudLoginException("Please set up your game with CloudLogin.SetUpGame before modifying users");
 
             var parameters = "?authentication_token=" + GetAuthenticationToken() + "&store_item_id=" + storeItemID+ "&reimburse=" + reimburseUser.ToString();
-            var request = UnityWebRequest.Get(CloudLogin.GetBaseURL() + "/users/" + this.id + "/remove_game_user_store_item" + parameters);
+            var request = UnityWebRequest.Get(CloudLogin.GetBaseURL() + "/users/" + CurrentUser.id + "/remove_game_user_store_item" + parameters);
+            request.SetRequestHeader("authentication_token", CloudLoginUser.CurrentUser.GetAuthenticationToken());
 
             yield return request.SendWebRequest();
 
@@ -551,6 +562,100 @@ namespace CloudLoginUnity
         }
 
         #endregion
+
+        #region Leaderboard
+
+        public void AddLeaderboardEntry(string leaderboardName, int score, Dictionary<string, string> extraAttributes = null, Action<string, bool> callback = null)
+        {
+            StartCoroutine(AddLeaderboardEntryRoutine(leaderboardName, score, extraAttributes, callback));
+        }
+
+        public void AddLeaderboardEntry(string leaderboardName, int score, Action<string, bool> callback = null)
+        {
+            StartCoroutine(AddLeaderboardEntryRoutine(leaderboardName, score, new Dictionary<string, string>(), callback));
+        }
+
+
+        private IEnumerator AddLeaderboardEntryRoutine(string leaderboardName, int score, Dictionary<string, string> extraAttributes, Action<string, bool> callback = null)
+        {
+            CloudLogin.Log("CloudLoginUser Adding Leaderboard Entry: " + leaderboardName + ": "+score.ToString());
+
+            if (CloudLogin.GetGameId() == null)
+                throw new CloudLoginException("Please set up your game with CloudLogin.SetUpGame before modifying users");
+
+            List<string> extraAttributesList = new List<string>();
+            foreach (KeyValuePair<string, string> entry in extraAttributes)
+            {
+                extraAttributesList.Add("\""+entry.Key.ToString() + "\": " + entry.Value.ToString());
+            }
+            
+            string extraAttributesJson = "{" + String.Join(", ", extraAttributesList.ToArray())+ "}";
+            WWWForm form = new WWWForm();
+            form.AddField("authentication_token", GetAuthenticationToken());
+            form.AddField("leaderboard_name", leaderboardName);
+            form.AddField("extra_attributes", extraAttributesJson);
+            form.AddField("score", score);
+
+            var request = UnityWebRequest.Post(CloudLogin.GetBaseURL() + "/users/" + CurrentUser.id + "/add_leaderboard_entry", form);
+            request.SetRequestHeader("authentication_token", CloudLoginUser.CurrentUser.GetAuthenticationToken());
+
+            yield return request.SendWebRequest();
+
+            if (CloudLoginUtilities.RequestIsSuccessful(request))
+            {
+                CloudLogin.Log("CloudLoginUser Add Leaderboard Entry: " + leaderboardName+ ": "+score);
+
+                var data = request.downloadHandler.text;
+            }
+
+            CloudLoginUtilities.HandleCallback(request, "Leaderboard Entry Has Been Added", callback);
+        }
+
+        public void GetLeaderboard(int limit, bool onePerUser, Action<string, bool> callback = null)
+        {
+            StartCoroutine(GetLeaderboardRoutine(limit, onePerUser, callback));
+        }
+
+        private IEnumerator GetLeaderboardRoutine(int limit, bool onePerUser, Action<string, bool> callback = null)
+        {
+            CloudLogin.Log("CloudLoginUser Get Leaderboard: " +limit.ToString());
+
+            if (CloudLogin.GetGameId() == null)
+                throw new CloudLoginException("Please set up your game with CloudLogin.SetUpGame before modifying users");
+
+            var parameters = "?authentication_token=" + GetAuthenticationToken() + "&limit=" + limit.ToString()+ "&one_per_user="+ onePerUser.ToString();
+            var request = UnityWebRequest.Get(CloudLogin.GetBaseURL() + "/users/" + CurrentUser.id + "/leaderboard_entries" + parameters);
+            request.SetRequestHeader("authentication_token", CloudLoginUser.CurrentUser.GetAuthenticationToken());
+
+            yield return request.SendWebRequest();
+
+            if (CloudLoginUtilities.RequestIsSuccessful(request))
+            {
+                CloudLogin.Log("CloudLoginUser Get Leaderboard Success: : " + limit.ToString());
+
+                var data = request.downloadHandler.text;
+                JSONObject json = JSONObject.Parse(data);
+                Debug.Log("got " + json);
+                var storeItems = json.GetArray("leaderboard_entries");
+                CloudLogin.Instance.leaderboardEntries.Clear();
+                foreach (var storeItem in storeItems)
+                {
+                    CloudLogin.Instance.leaderboardEntries.Add(new CloudLoginLeaderboardEntry(
+                        storeItem.Obj.GetString("username"),
+                        Convert.ToInt32(storeItem.Obj.GetNumber("score")),
+                        storeItem.Obj.GetString("leaderboard_name"),
+                        storeItem.Obj.GetString("extra_attributes"),
+                        Convert.ToInt32(storeItem.Obj.GetNumber("game_user_id"))
+                        )
+                   );
+                }
+
+            }
+
+            CloudLoginUtilities.HandleCallback(request, "Store Item has been removed", callback);
+        }
+
+        #endregion Leaderboard 
 
 
 

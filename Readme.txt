@@ -5,7 +5,7 @@ For full documentation Please check out cloudlogin.dev/docs
 
 
 Get Started
-1. Create a Free Account and get started within Unity Editor by clicking "Tools/CloudLogin/Generate CloudLogin Account"
+1. Create a Free Account at cloudlogin.dev
 2. See Next Section for custom accounts
 
 How to set your game up with CloudLogin

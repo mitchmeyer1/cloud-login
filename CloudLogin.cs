@@ -52,6 +52,8 @@ namespace CloudLoginUnity
         private string description;
         private bool verboseLogging = false;
         private List<CloudLoginStoreItem> store = new List<CloudLoginStoreItem>();
+        public List<CloudLoginLeaderboardEntry> leaderboardEntries = new List<CloudLoginLeaderboardEntry>();
+
         #endregion
 
         #region singleton management
@@ -72,7 +74,7 @@ namespace CloudLoginUnity
 
         #region globals
         private static string baseURL = "https://cloudlogin.dev/api/v1";
-        // private static string baseURL = "http://localhost:3000/api/v1";
+        //private static string baseURL = "http://localhost:3000/api/v1";
 
         public static string GetBaseURL()
         {
@@ -173,6 +175,8 @@ namespace CloudLoginUnity
             Log("CloudLogin Downloading Store Items");
             var body = "game_id=" + id + "&game_token=" + token;
             var request = UnityWebRequest.Get(baseURL + "/games/store_items?" + body);
+            if (CloudLoginUser.CurrentUser.GetAuthenticationToken() != null)
+                request.SetRequestHeader("authentication_token", CloudLoginUser.CurrentUser.GetAuthenticationToken());
 
             yield return request.SendWebRequest();
 
@@ -333,6 +337,53 @@ namespace CloudLoginUnity
 
 
 
+        #endregion
+
+        #region Leaderboard
+
+        public void GetLeaderboard(int limit, bool onePerUser, string LeaderboardName, Action<string, bool> callback = null)
+        {
+            StartCoroutine(GetLeaderboardRoutine(limit, onePerUser, LeaderboardName, callback));
+        }
+
+        private IEnumerator GetLeaderboardRoutine(int limit, bool onePerUser, string LeaderboardName, Action<string, bool> callback = null)
+        {
+            CloudLogin.Log("CloudLogin Get Leaderboard: " + limit.ToString());
+
+            if (CloudLogin.GetGameId() == null)
+                throw new CloudLoginException("Please set up your game with CloudLogin.SetUpGame before modifying users");
+
+            var parameters = "?authentication_token=" + CloudLoginUser.CurrentUser.GetAuthenticationToken() + "&limit=" + limit.ToString() + "&one_per_user=" + onePerUser.ToString()+ "&leaderboard_name="+ LeaderboardName.ToString();
+            var request = UnityWebRequest.Get(CloudLogin.GetBaseURL() + "/games/" + CloudLogin.GetGameId() + "/leaderboard_entries" + parameters);
+            request.SetRequestHeader("authentication_token", CloudLoginUser.CurrentUser.GetAuthenticationToken());
+
+            yield return request.SendWebRequest();
+
+            if (CloudLoginUtilities.RequestIsSuccessful(request))
+            {
+                CloudLogin.Log("CloudLogin Get Leaderboard Success: : " + limit.ToString());
+
+                var data = request.downloadHandler.text;
+                JSONObject json = JSONObject.Parse(data);
+                Debug.Log("got " + json);
+                var storeItems = json.GetArray("leaderboard_entries");
+                CloudLogin.Instance.leaderboardEntries.Clear();
+                foreach (var storeItem in storeItems)
+                {
+                    CloudLogin.Instance.leaderboardEntries.Add(new CloudLoginLeaderboardEntry(
+                        storeItem.Obj.GetString("username"),
+                        Convert.ToInt32(storeItem.Obj.GetNumber("score")),
+                        storeItem.Obj.GetString("leaderboard_name"),
+                        storeItem.Obj.GetString("extra_attributes"),
+                        Convert.ToInt32(storeItem.Obj.GetNumber("game_user_id"))
+                        )
+                   );
+                }
+
+            }
+
+            CloudLoginUtilities.HandleCallback(request, "Store Item has been removed", callback);
+        }
         #endregion
 
     }

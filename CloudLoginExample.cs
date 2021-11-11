@@ -130,6 +130,91 @@ public class CloudLoginExample : MonoBehaviour {
             print("Purchased Item");
             print("Current Credits: " + CloudLoginUser.CurrentUser.GetCredits());
         }
+
+        var extraAttributes = new Dictionary<string, string>();
+        extraAttributes.Add("deaths", "15");
+        extraAttributes.Add("Jewels", "12");
+
+        CloudLoginUser.CurrentUser.AddLeaderboardEntry("BombBomb",10, extraAttributes, LeaderboardEntryAdded);
+    }
+
+
+    void LeaderboardEntryAdded(string message, bool hasError)
+    {
+        if (hasError)
+        {
+            print("Error adding leaderboard entry: " + message);
+        }
+        else
+        {
+
+            print("Set Leaderboard Entry 2");
+            var extraAttributes = new Dictionary<string, string>();
+            extraAttributes.Add("deaths", "25");
+            extraAttributes.Add("Jewels", "15");
+
+            CloudLoginUser.CurrentUser.AddLeaderboardEntry("BombBomb", 7, extraAttributes, LeaderboardEntryAdded2);
+
+        }
+    }
+
+    void LeaderboardEntryAdded2(string message, bool hasError)
+    {
+        if (hasError)
+        {
+            print("Error adding leaderboard entry 2: " + message);
+        }
+        else
+        {
+            print("Set Leaderboard Entry 2");
+            CloudLoginUser.CurrentUser.GetLeaderboard(5, true, LeaderboardEntriesRetrieved);
+        }
+    }
+
+    void LeaderboardEntriesRetrieved(string message, bool hasError)
+    {
+        if (hasError)
+        {
+            print("Error loading leaderboard entries: " + message);
+        }
+        else
+        {
+
+            print("Got leaderboard entries for specific user!");
+            foreach( CloudLoginLeaderboardEntry entry in CloudLogin.Instance.leaderboardEntries)
+            {
+                print(entry.GetUsername() + ": " + entry.GetScore().ToString() + ": " + entry.GetLeaderboardName() );
+                foreach (KeyValuePair<string,string> kvPair in entry.GetExtraAttributes())
+                {
+                    print(kvPair.Key + ": " + kvPair.Value);
+                }
+                
+            }
+            CloudLogin.Instance.GetLeaderboard(5, true, "BombBomb", LeaderboardEntriesRetrievedAll);
+
+        }
+    }
+
+    void LeaderboardEntriesRetrievedAll(string message, bool hasError)
+    {
+        if (hasError)
+        {
+            print("Error loading leaderboard entries: " + message);
+        }
+        else
+        {
+            print("Got leaderboard entries for whole game!");
+            foreach (CloudLoginLeaderboardEntry entry in CloudLogin.Instance.leaderboardEntries)
+            {
+                print(entry.GetUsername() + ": " + entry.GetScore().ToString() + ": " + entry.GetLeaderboardName());
+                foreach (KeyValuePair<string, string> kvPair in entry.GetExtraAttributes())
+                {
+                    print(kvPair.Key + ": " + kvPair.Value);
+                }
+
+            }
+
+        }
     }
 
 
