@@ -18,7 +18,7 @@ namespace CloudLoginUnity
 
         internal static void HandleCallback(UnityWebRequest request, string successString, Action<string, bool> callback = null)
         {
-            if (request.isHttpError || request.isNetworkError)
+            if (request.result == UnityWebRequest.Result.ProtocolError || request.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.LogError("Request had error: " + request.error);
                 if (callback != null)
@@ -48,7 +48,7 @@ namespace CloudLoginUnity
 
         internal static bool RequestIsSuccessful(UnityWebRequest request)
         {
-            return !request.isHttpError && !request.isNetworkError && request.responseCode != 299;
+            return request.result != UnityWebRequest.Result.ProtocolError && request.result != UnityWebRequest.Result.ConnectionError && request.responseCode != 299;
         }
     }
 
