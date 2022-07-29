@@ -611,6 +611,38 @@ namespace CloudLoginUnity
             CloudLoginUtilities.HandleCallback(request, "Leaderboard Entry Has Been Added", callback);
         }
 
+        public void ClearLeaderboardEntries(string leaderboardName, Action<string, bool> callback = null)
+        {
+            StartCoroutine(ClearLeaderboardEntriesRoutine(leaderboardName, callback));
+        }
+
+
+        private IEnumerator ClearLeaderboardEntriesRoutine(string leaderboardName, Action<string, bool> callback = null)
+        {
+            CloudLogin.Log("CloudLoginUser Clearing Leaderboard Entry: " + leaderboardName);
+
+            if (CloudLogin.GetGameId() == null)
+                throw new CloudLoginException("Please set up your game with CloudLogin.SetUpGame before modifying users");
+
+            WWWForm form = new WWWForm();
+            form.AddField("authentication_token", GetAuthenticationToken());
+            form.AddField("leaderboard_name", leaderboardName);
+
+            var request = UnityWebRequest.Post(CloudLogin.GetBaseURL() + "/users/" + CurrentUser.id + "/clear_my_leaderboard_entries", form);
+            request.SetRequestHeader("authentication_token", CloudLoginUser.CurrentUser.GetAuthenticationToken());
+
+            yield return request.SendWebRequest();
+
+            if (CloudLoginUtilities.RequestIsSuccessful(request))
+            {
+                CloudLogin.Log("CloudLoginUser Clear Leaderboard Entry: " + leaderboardName);
+
+                var data = request.downloadHandler.text;
+            }
+
+            CloudLoginUtilities.HandleCallback(request, "Leaderboard Entries Have Been Cleared", callback);
+        }
+
         public void GetLeaderboard(int limit, bool onePerUser, Action<string, bool> callback = null)
         {
             StartCoroutine(GetLeaderboardRoutine(limit, onePerUser, callback));
